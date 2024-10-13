@@ -1,0 +1,172 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+    <meta name="description" content="Models - aiframe.org" />
+    <meta name="author" content="aiframe.org" />
+    <title>Models - aiframe.org</title>
+    <link rel="icon" type="image/x-icon" href="{% static 'website/images/favicon.ico' %}" />
+    <!-- Font Awesome icons (free version)-->
+    <script src="https://use.fontawesome.com/releases/v6.3.0/js/all.js" crossorigin="anonymous"></script>
+    <!-- Google fonts-->
+    <link href="https://fonts.googleapis.com/css?family=Varela+Round" rel="stylesheet" />
+    <link href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet" />
+    <!-- Core theme CSS (includes Bootstrap)-->
+    <link href="{% static 'website/css/styles.css' %}" rel="stylesheet" />
+    <style>
+        body {
+            padding-top: 70px;
+            background-color: #404040;
+            color: #f5f5f5;
+        }
+
+        #mainNav {
+            background-color: #333;
+        }
+        #mainNav .navbar-brand, #mainNav .nav-link {
+            color: #f5f5f5;
+        }
+        #mainNav .nav-link:hover {
+            color: #d1d1d1;
+        }
+
+        .models-section {
+            background-color: #404040;
+            padding: 100px 0;
+        }
+
+        .model-box {
+            background-color: #333333;
+            color: #f5f5f5;
+            padding: 20px;
+            margin: 15px;
+            border-radius: 5px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            width: 300px;
+            height: 380px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .model-box img {
+            width: 100%;
+            height: 180px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .model-box h4 {
+            color: #f5f5f5;
+            margin-top: 10px;
+            font-size: 1rem;
+        }
+
+        .model-box p {
+            color: #d1d1d1;
+            font-size: 0.85rem;
+            margin-bottom: 15px;
+        }
+
+        .model-box .btn-learn-more {
+            color: #007bff;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: auto;
+        }
+
+        .model-box .btn-learn-more:hover {
+            color: #0056b3;
+            text-decoration: underline;
+        }
+
+        /* Responsive layout */
+        .model-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        /* Adjust spacing for larger screens */
+        @media (min-width: 992px) {
+            .model-box {
+                flex: 1 1 calc(33.333% - 30px);
+                margin: 15px;
+            }
+        }
+    </style>
+</head>
+<body id="page-top">
+    <!-- Navigation-->
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top" id="mainNav">
+        <div class="container px-4 px-lg-5">
+            <a class="navbar-brand" href="#page-top">aiframe.org</a>
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-bs-toggle="collapse" data-bs-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                Menu
+                <i class="fas fa-bars"></i>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a class="nav-link" href="#models">Models</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#about">About</a></li>
+                    <li class="nav-item"><a class="nav-link" href="#contact">Contact</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Models Section-->
+    <section class="models-section" id="models">
+        <div class="container px-4 px-lg-5">
+            <h2 class="text-center mb-5">Our Models</h2>
+            <div class="model-grid">
+                {% for model in models %}
+                <div class="model-box">
+                    <img src="{{ model.image.url }}" alt="{{ model.title }}" class="img-fluid">
+                    <h4>{{ model.title|truncatechars:30 }}</h4>
+                    <div class="markdown-description" style="display:none;">{{ model.description|truncatewords:20 }}</div>
+                    <div class="rendered-description" style="line-height: 1.6; font-size: 0.85rem; color: #d1d1d1;"></div>
+                    <a href="{{ model.get_absolute_url }}" class="btn-learn-more">Learn More</a>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer-->
+    <footer class="footer bg-black small text-center text-white-50">
+        <div class="container px-4 px-lg-5">Copyright &copy; aiframe.org 2023</div>
+    </footer>
+
+    <!-- Bootstrap core JS-->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="{% static 'website/js/scripts.js' %}"></script>
+    <script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script>
+        MathJax = {
+            tex: {
+                inlineMath: [['$', '$'], ['\\(', '\\)']],
+                displayMath: [['$$', '$$'], ['\\[', '\\]']]
+            },
+            svg: { fontCache: 'global' }
+        };
+    
+        document.addEventListener("DOMContentLoaded", function() {
+            // Get raw markdown content from hidden div
+            const rawMarkdown = document.getElementById('markdown-content').innerText;
+            
+            // Convert the Markdown to HTML
+            if (rawMarkdown) {
+                const htmlContent = marked.parse(rawMarkdown);
+                document.getElementById('rendered-content').innerHTML = htmlContent;
+                MathJax.typesetPromise();  // Process MathJax after HTML is injected
+            }
+        });
+    </script>
+</body>
+</html>

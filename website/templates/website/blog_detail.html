@@ -1,0 +1,58 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block title %}{{ blog.title }} - aiframe.org{% endblock %}
+
+{% block content %}
+<section class="content-section" id="blog-detail">
+    <div class="container px-4 px-lg-5">
+        <!-- Title Section -->
+        <h2 class="text-center mb-5">{{ blog.title }}</h2>
+        
+        <!-- Image or Video Section -->
+        <div class="text-center mb-4">
+            {% if blog.image %}
+                <img src="{{ blog.image.url }}" alt="{{ blog.title }}" class="img-fluid" 
+                     style="max-width: 100%; width: 100%; max-height: 512px; border-radius: 15px; object-fit: cover;">
+            {% elif blog.video %}
+                <video controls class="img-fluid" 
+                       style="max-width: 100%; width: 100%; max-height: 512px; border-radius: 15px; object-fit: cover;">
+                    <source src="{{ blog.video.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            {% endif %}
+        </div>
+        
+        <!-- Content Section (no title included here) -->
+        <div class="content-box" style="padding: 20px; background-color: #333; border-radius: 10px;">
+            <div id="markdown-content" style="display:none;">{{ blog.description }}</div>
+            <div id="rendered-content" style="line-height: 1.6; font-size: 1rem; color: #f5f5f5;"></div>
+        </div>
+    </div>
+</section>
+
+<!-- JavaScript for MathJax and Marked.js -->
+<script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        svg: { fontCache: 'global' }
+    };
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get raw markdown content from hidden div
+        const rawMarkdown = document.getElementById('markdown-content').innerText;
+        
+        // Convert the Markdown to HTML
+        if (rawMarkdown) {
+            const htmlContent = marked.parse(rawMarkdown);
+            document.getElementById('rendered-content').innerHTML = htmlContent;
+            MathJax.typesetPromise();  // Process MathJax after HTML is injected
+        }
+    });
+</script>
+{% endblock %}

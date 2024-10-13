@@ -1,0 +1,57 @@
+{% extends "base_generic.html" %}
+{% load static %}
+
+{% block title %}{{ tutorial.title }} - aiframe.org{% endblock %}
+
+{% block content %}
+<section class="content-section" id="tutorial-detail">
+    <div class="container px-4 px-lg-5">
+        <!-- Title Section -->
+        <h2 class="text-center mb-5">{{ tutorial.title }}</h2>
+
+        <!-- Video or Image Section -->
+        <div class="text-center mb-4">
+            {% if tutorial.video %}
+                <video controls style="max-width: 100%; width: 100%; max-height: 512px; border-radius: 15px; object-fit: cover;">
+                    <source src="{{ tutorial.video.url }}" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+            {% elif tutorial.image %}
+                <img src="{{ tutorial.image.url }}" alt="{{ tutorial.title }}" class="img-fluid" 
+                     style="max-width: 100%; width: 100%; max-height: 512px; border-radius: 15px; object-fit: cover;">
+            {% endif %}
+        </div>
+
+        <!-- Content Section -->
+        <div class="content-box" style="background-color: #333333; padding: 20px; border-radius: 10px; color: #f5f5f5; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
+            <div id="markdown-content" style="display:none;">{{ tutorial.description }}</div>
+            <div id="rendered-content" style="line-height: 1.6; font-size: 1rem; color: #f5f5f5;"></div>
+        </div>
+    </div>
+</section>
+
+<!-- JavaScript for MathJax and Marked.js -->
+<script type="text/javascript" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script>
+    MathJax = {
+        tex: {
+            inlineMath: [['$', '$'], ['\\(', '\\)']],
+            displayMath: [['$$', '$$'], ['\\[', '\\]']]
+        },
+        svg: { fontCache: 'global' }
+    };
+
+    document.addEventListener("DOMContentLoaded", function() {
+        // Get the raw Markdown content from the hidden div
+        const rawMarkdown = document.getElementById('markdown-content').innerText;
+        
+        // Convert the Markdown to HTML
+        if (rawMarkdown) {
+            const htmlContent = marked.parse(rawMarkdown);
+            document.getElementById('rendered-content').innerHTML = htmlContent;
+            MathJax.typesetPromise();  // Process MathJax after HTML is injected
+        }
+    });
+</script>
+{% endblock %}
